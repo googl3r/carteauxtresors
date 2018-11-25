@@ -2,7 +2,7 @@ import mamadou.dia.carteauxtresors.entities.Box;
 import mamadou.dia.carteauxtresors.entities.GameMap;
 import mamadou.dia.carteauxtresors.entities.MapSize;
 import mamadou.dia.carteauxtresors.entities.Position;
-import mamadou.dia.carteauxtresors.gateways.LoadMapGateway;
+import mamadou.dia.carteauxtresors.gateways.MapLoader;
 import mamadou.dia.carteauxtresors.usecases.MapFileException;
 
 import java.nio.file.Path;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LoadMapGatewayStub implements LoadMapGateway{
+public class MapLoaderStub implements MapLoader{
 
     @Override
-    public GameMap loadMap(Path path) throws MapFileException {
+    public GameMap loadMap() throws MapFileException {
         MapSize mapSize = new MapSize(3, 4);
         List<Box> boxes = createBoxesWithTheirPositions();
         GameMap gameMap = new GameMap(mapSize, boxes);

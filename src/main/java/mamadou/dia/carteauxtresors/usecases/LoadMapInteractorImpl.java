@@ -1,16 +1,16 @@
 package mamadou.dia.carteauxtresors.usecases;
 
 import mamadou.dia.carteauxtresors.entities.GameMap;
-import mamadou.dia.carteauxtresors.gateways.LoadMapGateway;
+import mamadou.dia.carteauxtresors.gateways.MapLoader;
 
 public class LoadMapInteractorImpl implements LoadMapInteractor {
-    private LoadMapGateway loadMapGateway;
-    public LoadMapInteractorImpl(LoadMapGateway loadMapGateway) {
-        this.loadMapGateway = loadMapGateway;
+    private MapLoader mapLoader;
+    public LoadMapInteractorImpl(MapLoader mapLoader) {
+        this.mapLoader = mapLoader;
     }
 
     @Override
-    public GameMap loadMap(LoadMapRequest loadMapRequest) throws MapFileException {
-        return loadMapGateway.loadMap(loadMapRequest.getMapPath());
+    public GameMap loadMap() throws MapFileException {
+        return mapLoader.loadMap();
     }
 }

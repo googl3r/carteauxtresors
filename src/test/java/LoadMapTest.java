@@ -2,27 +2,21 @@ import mamadou.dia.carteauxtresors.entities.Box;
 import mamadou.dia.carteauxtresors.entities.GameMap;
 import mamadou.dia.carteauxtresors.entities.MapSize;
 import mamadou.dia.carteauxtresors.entities.Position;
-import mamadou.dia.carteauxtresors.gateways.LoadMapGateway;
+import mamadou.dia.carteauxtresors.gateways.MapLoader;
 import mamadou.dia.carteauxtresors.usecases.LoadMapInteractor;
 import mamadou.dia.carteauxtresors.usecases.LoadMapInteractorImpl;
-import mamadou.dia.carteauxtresors.usecases.LoadMapRequest;
 import mamadou.dia.carteauxtresors.usecases.MapFileException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 public class LoadMapTest {
 
-    private Path mapPath;
-    private LoadMapGateway loadMapGateway;
-    private LoadMapRequest loadMapRequest;
+    private MapLoader mapLoader;
     private LoadMapInteractor loadMapInteractor;
 
     private List<Box> boxes;
@@ -31,34 +25,32 @@ public class LoadMapTest {
 
     @Before
     public void setup() {
-        mapPath = Paths.get("path_of_existing_file");
-        loadMapRequest = new LoadMapRequest(mapPath);
         boxes = new ArrayList<>();
         mapSize = new MapSize(3, 4);
 
     }
     @Test(expected = MapFileException.class)
     public void shouldNotifyError_whenMapFileDoesntExist() throws MapFileException {
-        loadMapGateway = new FileDoesntExitLoadMapGatewayStub(mapPath);
-        loadMapInteractor = new LoadMapInteractorImpl(loadMapGateway);
-        loadMapInteractor.loadMap(loadMapRequest);
+        mapLoader = new MapDoesntExitMapLoaderStub();
+        loadMapInteractor = new LoadMapInteractorImpl(mapLoader);
+        loadMapInteractor.loadMap();
 
     }
     @Test
     public void shouldLoadMapSize() throws MapFileException {
-        loadMapGateway = new LoadMapGatewayStub();
-        loadMapInteractor = new LoadMapInteractorImpl(loadMapGateway);
+        mapLoader = new MapLoaderStub();
+        loadMapInteractor = new LoadMapInteractorImpl(mapLoader);
         expectedGameMap = new GameMap(mapSize, boxes);
-        GameMap gameMap = loadMapInteractor.loadMap(loadMapRequest);
+        GameMap gameMap = loadMapInteractor.loadMap();
         verifyMapSize(gameMap.getMapSize(), expectedGameMap.getMapSize());
     }
     @Test
     public void shouldLoadMapWithPositionOfEachBox() throws MapFileException {
-        loadMapGateway = new LoadMapGatewayStub();
-        loadMapInteractor = new LoadMapInteractorImpl(loadMapGateway);
+        mapLoader = new MapLoaderStub();
+        loadMapInteractor = new LoadMapInteractorImpl(mapLoader);
         boxes = createBoxes();
         expectedGameMap = new GameMap(mapSize, boxes);
-        GameMap gameMap = loadMapInteractor.loadMap(loadMapRequest);
+        GameMap gameMap = loadMapInteractor.loadMap();
         verifyMapBoxLoadedWithTheirPositions(expectedGameMap, gameMap);
 
     }
