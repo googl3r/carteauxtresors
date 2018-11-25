@@ -1,17 +1,21 @@
 package mamadou.dia.carteauxtresors.entities;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class GameMap {
     private MapSize mapSize;
-    private Map<Box, Position> boxes;
+    private List<Box> boxes;
+
+    public GameMap(MapSize mapSize, List<Box> boxes) {
+        this.mapSize = mapSize;
+        this.boxes = boxes;
+    }
 
     public MapSize getMapSize() {
         return mapSize;
     }
 
-    public Map<Box, Position> getBoxes() {
+    public List<Box> getBoxes() {
         return boxes;
     }
 
@@ -20,7 +24,7 @@ public class GameMap {
         this.mapSize = mapSize;
     }
 
-    public void setBoxes(Map<Box, Position> boxes) {
+    public void setBoxes(List<Box> boxes) {
         this.boxes = boxes;
     }
 }

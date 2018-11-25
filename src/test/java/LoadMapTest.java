@@ -13,6 +13,9 @@ import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoadMapTest {
@@ -22,10 +25,17 @@ public class LoadMapTest {
     private LoadMapRequest loadMapRequest;
     private LoadMapInteractor loadMapInteractor;
 
+    private List<Box> boxes;
+    private GameMap expectedGameMap;
+    private MapSize mapSize;
+
     @Before
     public void setup() {
-        loadMapRequest = new LoadMapRequest();
         mapPath = Paths.get("path_of_existing_file");
+        loadMapRequest = new LoadMapRequest(mapPath);
+        boxes = new ArrayList<>();
+        mapSize = new MapSize(3, 4);
+
     }
     @Test(expected = MapFileException.class)
     public void shouldNotifyError_whenMapFileDoesntExist() throws MapFileException {
@@ -36,21 +46,35 @@ public class LoadMapTest {
     }
     @Test
     public void shouldLoadMapSize() throws MapFileException {
-        loadMapGateway = new LoadMapGatewayStub(mapPath);
+        loadMapGateway = new LoadMapGatewayStub();
         loadMapInteractor = new LoadMapInteractorImpl(loadMapGateway);
+        expectedGameMap = new GameMap(mapSize, boxes);
         GameMap gameMap = loadMapInteractor.loadMap(loadMapRequest);
-        MapSize expectedMapSize = loadMapGateway.loadMap(mapPath).getMapSize();
-        verifyMapSize(gameMap.getMapSize(), expectedMapSize);
+        verifyMapSize(gameMap.getMapSize(), expectedGameMap.getMapSize());
     }
     @Test
     public void shouldLoadMapWithPositionOfEachBox() throws MapFileException {
-        loadMapGateway = new LoadMapGatewayStub(mapPath);
+        loadMapGateway = new LoadMapGatewayStub();
         loadMapInteractor = new LoadMapInteractorImpl(loadMapGateway);
+        boxes = createBoxes();
+        expectedGameMap = new GameMap(mapSize, boxes);
         GameMap gameMap = loadMapInteractor.loadMap(loadMapRequest);
-        Map<Box, Position> boxes = gameMap.getBoxes();
-        Map<Box, Position> expectedBoxes = loadMapGateway.loadMap(mapPath).getBoxes();
-        Assert.assertEquals(boxes.size(), expectedBoxes.size());
+        verifyMapBoxLoadedWithTheirPositions(expectedGameMap, gameMap);
 
+    }
+
+    private void verifyMapBoxLoadedWithTheirPositions(GameMap expectedGameMap, GameMap gameMap) {
+        Assert.assertEquals(gameMap.getBoxes().size(), expectedGameMap.getBoxes().size());
+        Assert.assertEquals(gameMap.getBoxes(), expectedGameMap.getBoxes());
+    }
+
+    private List<Box> createBoxes() {
+        List<Box> boxes = new ArrayList<>();
+        boxes.add(new Box(new Position(0, 1)));
+        boxes.add(new Box(new Position(1, 2)));
+        boxes.add(new Box(new Position(2, 3)));
+        boxes.add(new Box(new Position(3, 4)));
+        return boxes;
     }
 
     private void verifyMapSize(MapSize result, MapSize expected) {
