@@ -18,13 +18,4 @@ public class GameMap {
     public List<Box> getBoxes() {
         return boxes;
     }
-
-    public void setMapSize(MapSize mapSize) {
-
-        this.mapSize = mapSize;
-    }
-
-    public void setBoxes(List<Box> boxes) {
-        this.boxes = boxes;
-    }
 }

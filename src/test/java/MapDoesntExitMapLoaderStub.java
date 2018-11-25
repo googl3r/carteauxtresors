@@ -7,6 +7,6 @@ public class MapDoesntExitMapLoaderStub implements MapLoader {
 
     @Override
     public GameMap loadMap() throws MapFileException {
-        throw new MapFileException();
+        throw new MapFileException("Map doesnt exist");
     }
 }

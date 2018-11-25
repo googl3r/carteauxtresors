@@ -18,8 +18,6 @@ public class MapLoaderStub implements MapLoader{
         MapSize mapSize = new MapSize(3, 4);
         List<Box> boxes = createBoxesWithTheirPositions();
         GameMap gameMap = new GameMap(mapSize, boxes);
-        gameMap.setBoxes(boxes);
-        gameMap.setMapSize(mapSize);
         return gameMap;
     }
 

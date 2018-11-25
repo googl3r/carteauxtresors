@@ -29,35 +29,33 @@ public class LoadMapTest {
         mapSize = new MapSize(3, 4);
 
     }
-    @Test(expected = MapFileException.class)
-    public void shouldNotifyError_whenMapFileDoesntExist() throws MapFileException {
+    @Test
+    public void should_notify_when_map_can_not_be_loaded() throws MapFileException {
         mapLoader = new MapDoesntExitMapLoaderStub();
         loadMapInteractor = new LoadMapInteractorImpl(mapLoader);
+        try {
         loadMapInteractor.loadMap();
+        } catch (MapFileException e) {
+            String exceptionMessage = "Map doesnt exist";
+            Assert.assertEquals(exceptionMessage, e.getMessage());
+        }
 
     }
     @Test
-    public void shouldLoadMapSize() throws MapFileException {
-        mapLoader = new MapLoaderStub();
-        loadMapInteractor = new LoadMapInteractorImpl(mapLoader);
-        expectedGameMap = new GameMap(mapSize, boxes);
-        GameMap gameMap = loadMapInteractor.loadMap();
-        verifyMapSize(gameMap.getMapSize(), expectedGameMap.getMapSize());
-    }
-    @Test
-    public void shouldLoadMapWithPositionOfEachBox() throws MapFileException {
+    public void load_treasure_hunt_game() throws MapFileException {
         mapLoader = new MapLoaderStub();
         loadMapInteractor = new LoadMapInteractorImpl(mapLoader);
         boxes = createBoxes();
         expectedGameMap = new GameMap(mapSize, boxes);
         GameMap gameMap = loadMapInteractor.loadMap();
-        verifyMapBoxLoadedWithTheirPositions(expectedGameMap, gameMap);
+        verifyMapLoaded(expectedGameMap, gameMap);
 
     }
 
-    private void verifyMapBoxLoadedWithTheirPositions(GameMap expectedGameMap, GameMap gameMap) {
+    private void verifyMapLoaded(GameMap expectedGameMap, GameMap gameMap) {
         Assert.assertEquals(gameMap.getBoxes().size(), expectedGameMap.getBoxes().size());
         Assert.assertEquals(gameMap.getBoxes(), expectedGameMap.getBoxes());
+        verifyMapSize(expectedGameMap.getMapSize(), gameMap.getMapSize());
     }
 
     private List<Box> createBoxes() {
