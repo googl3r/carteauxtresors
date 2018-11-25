@@ -1,5 +1,7 @@
 package mamadou.dia.carteauxtresors.entities;
 
+import java.util.Objects;
+
 public class Position {
     private int x;
     private int y;
@@ -22,5 +24,10 @@ public class Position {
             return false;
         Position position = (Position) obj;
         return ((position.getX() == this.x) && (position.getY() == this.y));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }
